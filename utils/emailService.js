@@ -2,13 +2,16 @@ const nodemailer = require('nodemailer');
 
 // Create transporter with Gmail
 const transporter = nodemailer.createTransport({
-  service: 'gmail',
+  host: "smtp.gmail.com",
+  port: 587,
+  secure: false,
   auth: {
-    user: process.env.EMAIL_USER, // Your Gmail
-    pass: process.env.EMAIL_PASS  // Your Gmail App Password
-  }
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASS
+  },
+  connectionTimeout: 20000,
+  greetingTimeout: 20000
 });
-
 const sendVerificationEmail = async (email, verificationCode) => {
   try {
     console.log('🟡 Attempting to send verification email via Gmail to:', email);
