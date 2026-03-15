@@ -80,6 +80,11 @@ app.get('/api/health', (req, res) => {
     timestamp: new Date().toISOString()
   });
 });
+app.get('/', (req, res) => {
+  res.json({
+    message: 'TaskFlow Backend API is running 🚀'
+  });
+});
 
 // Database connection
 // MONGODB_URI must be set in Railway env vars (MongoDB Atlas connection string)
