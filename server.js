@@ -101,13 +101,21 @@ mongoose.connect(process.env.MONGODB_URI)
 
 const PORT = process.env.PORT || 5000;
 
-app.listen(PORT, () => {
-  console.log(`🚀 Server is running on http://localhost:${PORT}`);
-  console.log(`✅ Health check: http://localhost:${PORT}/api/health`);
-  console.log(`✅ Test route: http://localhost:${PORT}/api/test`);
-  console.log('🗄️ Using REAL MongoDB database - data will persist!');
-});
+mongoose.connect(process.env.MONGODB_URI)
+  .then(() => {
+    console.log('✅ MongoDB connected successfully!');
+    console.log('📊 Database:', mongoose.connection.db.databaseName);
 
+    app.listen(PORT, () => {
+      console.log(`🚀 Server is running on port ${PORT}`);
+      console.log(`✅ Health check: /api/health`);
+      console.log(`✅ Test route: /api/test`);
+    });
+  })
+  .catch(err => {
+    console.error('❌ MongoDB connection error:', err);
+    process.exit(1);
+  });
 // Handle graceful shutdown
 process.on('SIGINT', async () => {
   await mongoose.connection.close();
