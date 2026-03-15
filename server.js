@@ -20,10 +20,8 @@ app.use(session({
 
 // Middleware
 app.use(cors({
-  origin:["https://localhost:5173"],
-  credentials:true,
-  methods:["GET","POST","PUT","DELETE","OPTIONS"],
-  allowedHeaders:["Content-Type","Authorization"]
+  origin: true,
+  credentials: true
 }));
 app.options("*",cors());
 
