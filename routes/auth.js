@@ -43,19 +43,27 @@ router.post('/register', async (req, res) => {
       createdAt: new Date()
     };
 
-    // Store in memory (use temp email as key)
+    // Store in memory
     tempUsers.set(email, tempUserData);
     console.log('🟡 Temporary user data stored (not in database):', email);
 
-    console.log('🟡 Sending verification email...');
-    await sendVerificationEmail(email, verificationCode);
-    console.log('🟢 Verification email sent');
+    console.log('🟡 Preparing to send verification email...');
 
+    // 🔥 SEND RESPONSE FIRST (prevents frontend timeout)
     res.status(200).json({ 
       message: 'Verification code sent to your email. Please verify to complete registration.',
       email: email,
       requiresVerification: true
     });
+
+    // 🔥 SEND EMAIL IN BACKGROUND
+    sendVerificationEmail(email, verificationCode)
+      .then(() => {
+        console.log('🟢 Verification email sent successfully');
+      })
+      .catch((error) => {
+        console.error('🔴 Email sending error:', error);
+      });
 
   } catch (error) {
     console.error('🔴 Registration error:', error);
